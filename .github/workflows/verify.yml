@@ -23,8 +23,8 @@ jobs:
         with:
           target: x86_64-unknown-linux-musl
       - uses: Swatinem/rust-cache@v2
-      - run: cargo install cross --locked
-      - run: cross build --release --target x86_64-unknown-linux-musl
+      - run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - run: cargo build --release --target x86_64-unknown-linux-musl
       - uses: actions/upload-artifact@v4
         with:
           name: hbbs-hbbr-linux-x64-musl
