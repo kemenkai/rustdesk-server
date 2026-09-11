@@ -15,20 +15,19 @@ jobs:
       - run: cargo test --lib
   build:
     runs-on: ubuntu-latest
+    container: debian:bookworm
     steps:
+      - run: apt-get update && apt-get install -y build-essential pkg-config libssl-dev curl ca-certificates git
       - uses: actions/checkout@v4
         with:
           submodules: true
       - uses: dtolnay/rust-toolchain@stable
-        with:
-          target: x86_64-unknown-linux-musl
       - uses: Swatinem/rust-cache@v2
-      - run: cargo install cross --locked
-      - run: cross build --release --target x86_64-unknown-linux-musl
+      - run: cargo build --release
       - uses: actions/upload-artifact@v4
         with:
-          name: hbbs-hbbr-linux-x64-musl
+          name: hbbs-hbbr-linux-x64-bookworm
           path: |
-            target/x86_64-unknown-linux-musl/release/hbbs
-            target/x86_64-unknown-linux-musl/release/hbbr
+            target/release/hbbs
+            target/release/hbbr
           retention-days: 14
