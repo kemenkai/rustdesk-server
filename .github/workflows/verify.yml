@@ -1,6 +1,6 @@
 name: verify-and-build
 
-on:
+"on":
   workflow_dispatch:
 
 jobs:
