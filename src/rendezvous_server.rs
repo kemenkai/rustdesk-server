@@ -1507,6 +1507,11 @@ async fn check_relay_servers(rs0: Arc<RelayServers>, tx: Sender) {
     let mut futs = Vec::new();
     let rs = Arc::new(Mutex::new(Vec::new()));
     for x in rs0.iter() {
+        if is_ws_url(x) {
+            // ws(s) URL 由客户端直接连接,无法按 host:port 探活,视为存活
+            rs.lock().await.push(x.clone());
+            continue;
+        }
         let mut host = x.to_owned();
         if !host.contains(':') {
             host = format!("{}:{}", host, config::RELAY_PORT);

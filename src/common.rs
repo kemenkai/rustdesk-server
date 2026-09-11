@@ -36,10 +36,16 @@ pub(crate) fn test_if_valid_server(host: &str, name: &str) -> ResultType<SocketA
 }
 
 #[allow(dead_code)]
+#[inline]
+pub(crate) fn is_ws_url(s: &str) -> bool {
+    s.starts_with("ws://") || s.starts_with("wss://")
+}
+
+#[allow(dead_code)]
 pub(crate) fn get_servers(s: &str, tag: &str) -> Vec<String> {
     let servers: Vec<String> = s
         .split(',')
-        .filter(|x| !x.is_empty() && test_if_valid_server(x, tag).is_ok())
+        .filter(|x| !x.is_empty() && (is_ws_url(x) || test_if_valid_server(x, tag).is_ok()))
         .map(|x| x.to_owned())
         .collect();
     log::info!("{}={:?}", tag, servers);
